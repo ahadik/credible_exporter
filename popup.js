@@ -6,29 +6,27 @@ function getLoans() {
     const topRow = loan.querySelector('._24Qwagdk').children;
     
 
-    const lender = loan.querySelector('._3oNaBUOZ._1B4_JOwH.lN_Hn_F3._26zbLcDC').innerText;
-    const interest_rate = topRow[0].querySelector('._3Laaoq7U._3kmgqabP._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC').innerText.replace(/[^0-9.%]/g, '');
+    const lender = loan.querySelector('._3oNaBUOZ._1B4_JOwH.lN_Hn_F3._26zbLcDC').textContent;
+    const interest_rate = topRow[0].querySelector('._3Laaoq7U._3kmgqabP._92mVf2sd.lN_Hn_F3._26zbLcDC').textContent.replace(/[^0-9.%]/g, '');
 
-    const apr = topRow[0].querySelector('._2laQWIVw._3kmgqabP._181T4gJT.lN_Hn_F3._26zbLcDC').innerText.replace(/[^0-9.%]/g, '');
-    const rate_type = topRow[1].querySelector('.didNIdwB ._3Laaoq7U._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC').innerText;
-    const total_interest = topRow[2].querySelector('._3Laaoq7U._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC').innerText;
+    const apr = topRow[0].querySelector('._2laQWIVw._3kmgqabP._181T4gJT.lN_Hn_F3._26zbLcDC').textContent.replace(/[^0-9.%]/g, '');
+    const rate_type = topRow[1].querySelector('.didNIdwB ._3Laaoq7U._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC').textContent;
+    const total_interest = topRow[2].querySelector('._3Laaoq7U._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC').textContent;
     
 
     let payment_during_school;
     let payment_after_school;
     let duration;
 
-    const scheduleText = loan.querySelector('._15WnuB0e').innerText;
-
-    if (scheduleText === 'after graduation for') {
+    if (loan.querySelector('._1h7v4I0H')) {
       const afterSchoolDetails = loan.querySelector('._3Laaoq7U.didNIdwB');
-      payment_during_school = loan.querySelector('._3Laaoq7U._1niZNOeu ._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC').innerText;
-      payment_after_school = afterSchoolDetails.querySelectorAll('._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC')[0].innerText;
-      duration = afterSchoolDetails.querySelectorAll('._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC')[1].innerText;
-    } else if (scheduleText === 'starting immediately for') {
-      payment_during_school = loan.querySelectorAll('._3Laaoq7U._3kmgqabP._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC')[1].innerText;
-      payment_after_school = loan.querySelectorAll('._3Laaoq7U._3kmgqabP._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC')[1].innerText;
-      duration = loan.querySelector('._15WnuB0e + ._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC');
+      payment_during_school = loan.querySelector('._3Laaoq7U._1niZNOeu ._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC').textContent;
+      payment_after_school = afterSchoolDetails.querySelectorAll('._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC')[0].textContent;
+      duration = afterSchoolDetails.querySelectorAll('._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC')[1].textContent;
+    } else {
+      payment_during_school = loan.querySelectorAll('._3Laaoq7U._3kmgqabP._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC')[0].textContent;
+      payment_after_school = loan.querySelectorAll('._3Laaoq7U._3kmgqabP._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC')[0].textContent;
+      duration = loan.querySelector('._15WnuB0e + ._253Cb2Tw._92mVf2sd.lN_Hn_F3._26zbLcDC').textContent;
     }
 
     return {
@@ -55,7 +53,7 @@ function getLoans() {
     chrome.runtime.sendMessage(loans);
   }
   
-  if (expanderDOMElem.innerText === 'Show 63 less relevant loan options') {
+  if (expanderDOMElem.textContent === 'Show 63 less relevant loan options') {
     expanderDOMElem.click();
     function attemptParse() {
       if ((getLoans().length > currNumLoans) && (parseLoan(getLoans()[getLoans().length - 1]).lender)) {
@@ -71,7 +69,7 @@ function getLoans() {
 }
 
 generateCSV.onclick = function(element) {
-  generateCSV.innerText = 'One sec...';
+  generateCSV.textContent = 'One sec...';
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     new Promise((resolve) => {
       chrome.runtime.onMessage.addListener(
@@ -80,10 +78,10 @@ generateCSV.onclick = function(element) {
         }
       );
     }).then((loans) => {
-      generateCSV.innerText = 'Done!';
-      window.setTimeout(() => {generateCSV.innerText = 'Go!';}, 2000)
+      generateCSV.textContent = 'Done!';
+      window.setTimeout(() => {generateCSV.textContent = 'Go!';}, 2000)
       let element = document.createElement('a');
-      const headers = Object.keys(loans[0])
+      const headers = Object.keys(loans[0]);
       const headerNames = headers.map(header => `"${header.replace('_', ' ')}"`).join(',');
       const content = loans.map((loan) => {
         return headers.map(header => `"${loan[header]}"`).join(',');
