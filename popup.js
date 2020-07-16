@@ -70,10 +70,6 @@ function getLoans() {
   }
 }
 
-chrome.downloads.onDeterminingFilename.addListener(function(item, suggest) {
-  suggest({filename: 'credible.csv'});
-});
-
 generateCSV.onclick = function(element) {
   generateCSV.innerText = 'One sec...';
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
