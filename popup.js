@@ -53,7 +53,7 @@ function getLoans() {
     chrome.runtime.sendMessage(loans);
   }
   
-  if (expanderDOMElem.textContent === 'Show 63 less relevant loan options') {
+  if (expanderDOMElem.textContent.includes('Show')) {
     expanderDOMElem.click();
     function attemptParse() {
       if ((getLoans().length > currNumLoans) && (parseLoan(getLoans()[getLoans().length - 1]).lender)) {
